@@ -5,13 +5,22 @@ import { MDXRemote } from "next-mdx-remote";
 import { MDXComponents } from "@/components/docs/MDXComponents";
 import { notFound } from "next/navigation";
 
+interface ExampleContent {
+  frontMatter: {
+    title: string;
+    description?: string;
+    [key: string]: unknown;
+  };
+  content: unknown;
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 export default function ExamplePage({ params }: PageProps) {
   const resolvedParams = use(params);
-  const [example, setExample] = useState<any>(null);
+  const [example, setExample] = useState<ExampleContent | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

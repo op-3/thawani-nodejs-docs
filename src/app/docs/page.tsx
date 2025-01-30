@@ -3,8 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+interface Doc {
+  title: string;
+  description?: string;
+  slug: string;
+  position?: number;
+}
+
 export default function DocsPage() {
-  const [docs, setDocs] = useState<any[]>([]);
+  const [docs, setDocs] = useState<Doc[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
