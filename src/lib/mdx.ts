@@ -4,12 +4,20 @@ import matter from "gray-matter";
 import { serialize } from "next-mdx-remote/serialize";
 import rehypeHighlight from "rehype-highlight";
 
-export async function getDocBySlug(slug: string) {
+interface DocFrontMatter {
+  title: string;
+  description?: string;
+  position?: number;
+  [key: string]: unknown;
+}
+
+export async function getDocBySlug(slug: string, folder: string = "docs") {
   try {
     const realSlug = slug.replace(/\.mdx$/, "");
     const fullPath = path.join(
       process.cwd(),
-      "src/content/docs",
+      "src/content",
+      folder,
       `${realSlug}.mdx`
     );
     const fileContents = fs.readFileSync(fullPath, "utf8");
@@ -23,31 +31,33 @@ export async function getDocBySlug(slug: string) {
 
     return {
       slug: realSlug,
-      frontMatter: data,
+      frontMatter: data as DocFrontMatter,
       content: mdxSource,
     };
-  } catch (error) {
-    throw new Error(`Failed to load doc: ${error.message}`);
+  } catch (err) {
+    console.error("Failed to load doc:", err);
+    throw err;
   }
 }
 
-export async function getAllDocs() {
+export async function getAllDocs(folder: string = "docs") {
   try {
-    const docsDirectory = path.join(process.cwd(), "src/content/docs");
+    const docsDirectory = path.join(process.cwd(), "src/content", folder);
     const files = fs.readdirSync(docsDirectory);
 
-    const docs = files.map((file) => {
+    const docs = files.map((file): DocFrontMatter & { slug: string } => {
       const source = fs.readFileSync(path.join(docsDirectory, file), "utf8");
       const { data } = matter(source);
 
       return {
-        ...data,
+        ...(data as DocFrontMatter),
         slug: file.replace(/\.mdx$/, ""),
       };
     });
 
-    return docs.sort((a: any, b: any) => (a.position || 0) - (b.position || 0));
-  } catch (error) {
+    return docs.sort((a, b) => (a.position || 0) - (b.position || 0));
+  } catch (err) {
+    console.error("Failed to list docs:", err);
     return [];
   }
 }

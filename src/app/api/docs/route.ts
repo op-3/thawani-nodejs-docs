@@ -4,6 +4,15 @@ import fs from "fs";
 import matter from "gray-matter";
 import { serialize } from "next-mdx-remote/serialize";
 
+interface DocContent {
+  frontMatter: {
+    title: string;
+    description?: string;
+    [key: string]: unknown;
+  };
+  content: unknown;
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const slug = searchParams.get("slug");
@@ -17,11 +26,14 @@ export async function GET(request: Request) {
 
     const mdxSource = await serialize(content);
 
-    return NextResponse.json({
+    const response: DocContent = {
       frontMatter: data,
       content: mdxSource,
-    });
-  } catch (error) {
+    };
+
+    return NextResponse.json(response);
+  } catch (err) {
+    console.error("Failed to fetch document:", err);
     return NextResponse.json({ error: "Document not found" }, { status: 404 });
   }
 }
