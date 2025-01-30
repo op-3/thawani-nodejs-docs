@@ -147,7 +147,7 @@ try {
 
 ## Documentation
 
-For complete documentation, visit
+For complete documentation, visit https://thawani-nodejs.vercel.app/
 
 ## Security
 
