@@ -1,0 +1,36 @@
+---
+title: Customer Management
+description: Learn how to manage customers in Thawani
+position: 3
+---
+
+# Customer Management
+
+## Creating a Customer
+
+```typescript
+const customer = await thawani.customers.create({
+  client_customer_id: "customer@example.com",
+});
+```
+
+## Retrieving a Customer
+
+```typescript
+const customer = await thawani.customers.retrieve(customerId);
+```
+
+## Listing Customers
+
+```typescript
+const customers = await thawani.customers.list({
+  limit: 10,
+  skip: 0,
+});
+```
+
+## Deleting a Customer
+
+```typescript
+const result = await thawani.customers.delete(customerId);
+```

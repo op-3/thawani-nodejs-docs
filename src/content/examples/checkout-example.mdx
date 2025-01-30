@@ -1,0 +1,53 @@
+---
+title: Complete Checkout Integration
+description: Full example of integrating Thawani checkout in an Express.js application
+position: 1
+---
+
+# Complete Checkout Integration Example
+
+```typescript
+import express from "express";
+import { ThawaniClient } from "thawani-nodejs";
+
+const app = express();
+const thawani = new ThawaniClient({
+  secretKey: process.env.THAWANI_SECRET_KEY!,
+  publishableKey: process.env.THAWANI_PUBLISHABLE_KEY!,
+  sandbox: process.env.NODE_ENV !== "production",
+});
+
+app.post("/create-checkout", async (req, res) => {
+  try {
+    const session = await thawani.checkout.create({
+      client_reference_id: `order_${Date.now()}`,
+      mode: "payment",
+      products: [
+        {
+          name: "Premium Package",
+          unit_amount: 1000,
+          quantity: 1,
+        },
+      ],
+      success_url: `${req.protocol}://${req.get("host")}/success`,
+      cancel_url: `${req.protocol}://${req.get("host")}/cancel`,
+      metadata: {
+        order_id: "123",
+        customer_name: req.body.customerName,
+      },
+    });
+
+    res.json({
+      url: thawani.getPublicCheckoutUrl(session.session_id),
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error.message,
+    });
+  }
+});
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
+```

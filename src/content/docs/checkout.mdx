@@ -1,0 +1,54 @@
+---
+title: Checkout Sessions
+description: Learn how to create and manage checkout sessions
+position: 2
+---
+
+# Checkout Sessions
+
+## Creating a Checkout Session
+
+```typescript
+const session = await thawani.checkout.create({
+  client_reference_id: "order_123",
+  mode: "payment",
+  products: [
+    {
+      name: "Product Name",
+      unit_amount: 1000,
+      quantity: 1,
+    },
+  ],
+  success_url: "https://your-website.com/success",
+  cancel_url: "https://your-website.com/cancel",
+  metadata: {
+    order_id: "123",
+  },
+});
+```
+
+## Session Parameters
+
+| Parameter           | Type                     | Required | Description                              |
+| ------------------- | ------------------------ | -------- | ---------------------------------------- |
+| client_reference_id | string                   | Yes      | Your unique reference for the session    |
+| mode                | 'payment'/'subscription' | Yes      | Type of payment                          |
+| products            | Product[]                | Yes      | Array of products                        |
+| success_url         | string                   | Yes      | URL to redirect after successful payment |
+| cancel_url          | string                   | Yes      | URL to redirect if payment is cancelled  |
+| metadata            | object                   | No       | Additional information                   |
+
+## Retrieving a Session
+
+```typescript
+const session = await thawani.checkout.retrieve(sessionId);
+```
+
+## Listing Sessions
+
+```typescript
+const sessions = await thawani.checkout.list({
+  limit: 10,
+  skip: 0,
+});
+```

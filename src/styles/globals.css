@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Additional styles for MDX content */
+.prose {
+  @apply max-w-none;
+}
+
+.prose pre {
+  @apply rounded-lg bg-gray-900 text-white;
+}
+
+.prose code {
+  @apply rounded-lg px-1 py-0.5;
+}
+
+.prose a {
+  @apply text-blue-500 hover:text-blue-600 no-underline;
+}
+
+.prose table {
+  @apply w-full;
+}
+
+.prose th {
+  @apply bg-gray-100 p-2 text-left;
+}
+
+.prose td {
+  @apply border-t p-2;
+}

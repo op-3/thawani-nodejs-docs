@@ -1,0 +1,74 @@
+---
+title: Complete Webhook Integration
+description: Full example of handling Thawani webhooks in an Express.js application
+position: 2
+---
+
+# Complete Webhook Integration Example
+
+```typescript
+import express from "express";
+import { ThawaniClient } from "thawani-nodejs";
+
+const app = express();
+const thawani = new ThawaniClient({
+  secretKey: process.env.THAWANI_SECRET_KEY!,
+  publishableKey: process.env.THAWANI_PUBLISHABLE_KEY!,
+  sandbox: process.env.NODE_ENV !== "production",
+});
+
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
+    try {
+      const event = thawani.webhooks.constructEvent(
+        req.body,
+        req.headers["thawani-signature"],
+        req.headers["thawani-timestamp"]
+      );
+
+      switch (event.type) {
+        case "payment.succeeded":
+          await handleSuccessfulPayment(event.data);
+          break;
+        case "payment.failed":
+          await handleFailedPayment(event.data);
+          break;
+        case "refund.succeeded":
+          await handleSuccessfulRefund(event.data);
+          break;
+        default:
+          console.log(`Unhandled event type: ${event.type}`);
+      }
+
+      res.json({ received: true });
+    } catch (error) {
+      console.error("Webhook error:", error.message);
+      res.status(400).send(`Webhook Error: ${error.message}`);
+    }
+  }
+);
+
+async function handleSuccessfulPayment(data) {
+  // Update order status
+  // Send confirmation email
+  console.log("Payment succeeded:", data);
+}
+
+async function handleFailedPayment(data) {
+  // Update order status
+  // Notify customer
+  console.log("Payment failed:", data);
+}
+
+async function handleSuccessfulRefund(data) {
+  // Update order status
+  // Send refund confirmation
+  console.log("Refund succeeded:", data);
+}
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
+```

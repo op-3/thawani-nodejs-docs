@@ -1,0 +1,70 @@
+---
+title: Getting Started
+description: Learn how to integrate Thawani payment gateway in your application
+position: 1
+---
+
+# Getting Started with Thawani Node.js
+
+## Installation
+
+Install the package using npm:
+
+```bash
+npm install thawani-nodejs
+```
+
+Or using yarn:
+
+```bash
+yarn add thawani-nodejs
+```
+
+## Basic Setup
+
+```typescript
+import { ThawaniClient } from "thawani-nodejs";
+
+const thawani = new ThawaniClient({
+  secretKey: "your_secret_key",
+  publishableKey: "your_publishable_key",
+  sandbox: true, // Set to false for production
+});
+```
+
+## Environment Variables
+
+Add these environment variables to your .env file:
+
+```env
+THAWANI_SECRET_KEY=your_secret_key
+THAWANI_PUBLISHABLE_KEY=your_publishable_key
+THAWANI_SANDBOX=true
+```
+
+## Quick Start Example
+
+Here's a simple example to create a checkout session:
+
+```typescript
+async function createCheckout() {
+  const session = await thawani.checkout.create({
+    client_reference_id: "order_123",
+    mode: "payment",
+    products: [
+      {
+        name: "Product Name",
+        unit_amount: 1000, // 10 OMR in baisa
+        quantity: 1,
+      },
+    ],
+    success_url: "https://your-website.com/success",
+    cancel_url: "https://your-website.com/cancel",
+    metadata: {
+      order_id: "123",
+    },
+  });
+
+  return thawani.getPublicCheckoutUrl(session.session_id);
+}
+```

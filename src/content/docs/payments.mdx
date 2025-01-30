@@ -1,0 +1,42 @@
+---
+title: Payments
+description: Learn how to handle payments and refunds
+position: 4
+---
+
+# Payments
+
+## Retrieving a Payment
+
+```typescript
+const payment = await thawani.payments.retrieve(paymentId);
+```
+
+## Listing Payments
+
+```typescript
+const payments = await thawani.payments.list({
+  limit: 10,
+  skip: 0,
+});
+```
+
+## Payment Status
+
+Payments can have the following statuses:
+
+- **successful**: Payment was successful
+- **failed**: Payment failed
+- **pending**: Payment is being processed
+
+## Handling Refunds
+
+```typescript
+const refund = await thawani.refunds.create({
+  payment_id: paymentId,
+  reason: "Customer request",
+  metadata: {
+    order_id: "123",
+  },
+});
+```
