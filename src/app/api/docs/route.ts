@@ -4,12 +4,15 @@ import fs from "fs";
 import matter from "gray-matter";
 import { serialize } from "next-mdx-remote/serialize";
 
+interface FrontMatter {
+  title: string;
+  description?: string;
+  position?: number;
+  [key: string]: unknown;
+}
+
 interface DocContent {
-  frontMatter: {
-    title: string;
-    description?: string;
-    [key: string]: unknown;
-  };
+  frontMatter: FrontMatter;
   content: unknown;
 }
 
@@ -26,8 +29,15 @@ export async function GET(request: Request) {
 
     const mdxSource = await serialize(content);
 
+    // Type cast to ensure data has required fields
+    const frontMatter = data as FrontMatter;
+
+    if (!frontMatter.title) {
+      throw new Error("Document is missing required title field");
+    }
+
     const response: DocContent = {
-      frontMatter: data,
+      frontMatter,
       content: mdxSource,
     };
 
