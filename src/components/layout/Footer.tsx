@@ -11,7 +11,7 @@ export function Footer() {
         <div className="mt-8 md:mt-0 md:order-2">
           <div className="flex justify-center space-x-6">
             <a
-              href="https://github.com/op-3"
+              href="https://github.com/op-3/thawani-nodejs"
               className="text-gray-400 hover:text-gray-500"
             >
               <span className="sr-only">GitHub</span>
