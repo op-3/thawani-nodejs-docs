@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
-import { MDXRemote } from "next-mdx-remote";
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { MDXComponents } from "@/components/docs/MDXComponents";
 import { notFound } from "next/navigation";
 
@@ -11,7 +11,7 @@ interface DocContent {
     description?: string;
     [key: string]: unknown;
   };
-  content: unknown;
+  content: MDXRemoteSerializeResult;
 }
 
 interface PageProps {

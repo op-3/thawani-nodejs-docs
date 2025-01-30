@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 import matter from "gray-matter";
+import { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
 import { serialize } from "next-mdx-remote/serialize";
 
 interface FrontMatter {
@@ -13,7 +14,7 @@ interface FrontMatter {
 
 interface DocContent {
   frontMatter: FrontMatter;
-  content: unknown;
+  content: MDXRemoteSerializeResult;
 }
 
 export async function GET(request: Request) {
@@ -29,7 +30,6 @@ export async function GET(request: Request) {
 
     const mdxSource = await serialize(content);
 
-    // Type cast to ensure data has required fields
     const frontMatter = data as FrontMatter;
 
     if (!frontMatter.title) {
